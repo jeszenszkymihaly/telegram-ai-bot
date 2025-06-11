@@ -45,7 +45,7 @@ def handle_message(update: Update, context):
 @app.route(f"/{TOKEN}", methods=["POST"])
 def webhook():
     update = telegram.Update.de_json(request.get_json(force=True), bot)
-    dispatcher.process_update(update)
+    application.process_update(update)
     return "ok"
 
 # Dispatcher beállítása
