@@ -3,12 +3,14 @@ import json
 from flask import Flask, request
 import telegram
 from telegram import Update
-from telegram.ext import Dispatcher, MessageHandler, CommandHandler, filters
+from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters
+
 
 app = Flask(__name__)
 
 # 🟡 TOKEN: Írd ide a saját bot tokenedet a BotFather-től
-TOKEN = "IDE_ÍRD_BE_A_TOKENED"
+TOKEN = "7561209535:AAHMvq7j5SMscrfQajALHNjrnapZDeBzjLc"
+
 bot = telegram.Bot(token=TOKEN)
 
 MEMORY_FILE = "memory.json"
