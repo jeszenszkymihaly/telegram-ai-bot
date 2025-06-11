@@ -1,18 +1,15 @@
 import os
 import json
 from flask import Flask, request
-import telegram
-from telegram import Update
+from telegram import Update, Bot
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters
-
 
 app = Flask(__name__)
 
-# 🟡 TOKEN: Írd ide a saját bot tokenedet a BotFather-től
+# 🔑 TOKEN - ide a saját bot tokened kell
 TOKEN = "7561209535:AAHMvq7j5SMscrfQajALHNjrnapZDeBzjLc"
 
-bot = telegram.Bot(token=TOKEN)
-
+bot = Bot(token=TOKEN)
 MEMORY_FILE = "memory.json"
 
 def load_memory():
@@ -26,7 +23,7 @@ def save_memory(memory):
         json.dump(memory, f, ensure_ascii=False, indent=2)
 
 def start(update: Update, context):
-    update.message.reply_text("Szia! Írj bármit, emlékezni fogok rá!")
+    update.message.reply_text("Szia! Írj bármit, emlékezni fogok rá! 😊")
 
 def handle_message(update: Update, context):
     user_id = str(update.effective_user.id)
@@ -42,18 +39,17 @@ def handle_message(update: Update, context):
     response = f"Emlékszem, hogy ezt írtad korábban: {last_msg}\nMost ezt írtad: {user_msg}"
     update.message.reply_text(response)
 
-@app.route("/webhook", methods=["POST"])
+@app.route(f"/{TOKEN}", methods=["POST"])
 def webhook():
-    update = telegram.Update.de_json(request.get_json(force=True), bot)
-    application.process_update(update)
+    update = Update.de_json(request.get_json(force=True), bot)
+    dispatcher.process_update(update)
     return "ok"
 
 # Dispatcher beállítása
-from telegram.ext import ApplicationBuilder
-application = ApplicationBuilder().token(TOKEN).build()
-
-application.add_handler(CommandHandler("start", start))
-application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+from telegram.ext import Dispatcher
+dispatcher = Dispatcher(bot, None, workers=0)
+dispatcher.add_handler(CommandHandler("start", start))
+dispatcher.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
 @app.route("/")
 def index():
