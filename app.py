@@ -42,7 +42,7 @@ def handle_message(update: Update, context):
     response = f"Emlékszem, hogy ezt írtad korábban: {last_msg}\nMost ezt írtad: {user_msg}"
     update.message.reply_text(response)
 
-@app.route(f"/{TOKEN}", methods=["POST"])
+@app.route("/webhook", methods=["POST"])
 def webhook():
     update = telegram.Update.de_json(request.get_json(force=True), bot)
     application.process_update(update)
